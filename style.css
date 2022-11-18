@@ -1,0 +1,21 @@
+.container {
+    display: flex;
+    justify-content: center;
+}
+
+#grid {
+    flex-direction: column;
+    margin-top: 2%;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    border: 1px solid #DDDDDD;
+}
+
+#changeSizeBtn {
+    margin-top: 2%;
+}
