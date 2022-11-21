@@ -4,11 +4,18 @@ const GRIDWIDTH = 800;
 grid.setAttribute("width", `${GRIDWIDTH}px`);
 let padding = 0;
 
-let initialState = new Array(SIZE).fill(0);
-for (let i = 0; i < SIZE; i++) {
-  initialState[i] = new Array(SIZE).fill(0);
+// virtual grid with 1 row or column of padding around each side
+let initialState = new Array(SIZE + 2).fill(0);
+for (let i = 0; i < SIZE + 2; i++) {
+  initialState[i] = new Array(SIZE + 2).fill(0);
 }
-let currentState = initialState;
+
+// fake seed
+initialState[4][4] = 1;
+initialState[4][5] = 1;
+initialState[4][6] = 1;
+
+let currentState = initialState; // mutating ?
 
 let body = document.querySelector("body");
 body.addEventListener("load", buildStructure(initialState));
@@ -16,11 +23,11 @@ body.addEventListener("load", buildStructure(initialState));
 function buildStructure(state) {
   let size = state.length;
   let idCount = 0;
-  for (let row = 0; row < size; row++) {
+  for (let row = 1; row < size - 1; row++) {
     let newRow = document.createElement("div");
     newRow.setAttribute("class", "row");
     grid.append(newRow);
-    for (let column = 0; column < size; column++) {
+    for (let column = 1; column < size - 1; column++) {
       let cell = document.createElement("div");
       cell.setAttribute("class", "cell");
       cell.setAttribute("id", idCount); // ?
@@ -30,32 +37,84 @@ function buildStructure(state) {
       cell.innerText = " ";
       // redraw whole grid on mouse movement into new cell
       cell.addEventListener("mouseenter", () => {
-        draw(calcNewState(currentState));
+        draw(calcNewState(currentState, idCount));
       });
       newRow.append(cell);
     }
   }
 }
 
-function calcNewState(state) {
-  let NewState = state;
-  // calc
-  // ...
-  return NewState;
+function calcNewState(state, id) {
+  // toggle current mouse pointer cell
+  // let idCount = 0;
+  // for (let row = 1; row < state.length - 1; row++) {
+  //   for (column = 1; column < state.length - 1; column++) {
+  //     if (idCount == id) {
+  //       state[row][column] == 0
+  //         ? (state[row][column] = 1)
+  //         : (state[row][column] = 0);
+  //     } else {
+  //       idCount++;
+  //     }
+  //   }
+  // }
+
+  // calculate new grid
+  let newState = state;
+  for (let row = 1; row < state.length - 1; row++) {
+    for (column = 1; column < state.length - 1; column++) {
+      // count living cells among 8 neighbours
+      let livingNeighbours =
+        state[row - 1][column - 1] +
+        state[row - 1][column] +
+        state[row - 1][column + 1] +
+        state[row][column - 1] +
+        state[row][column + 1] +
+        state[row + 1][column - 1] +
+        state[row + 1][column] +
+        state[row + 1][column + 1];
+
+      // apply Conway's rules
+      if (livingNeighbours == 3) {
+        newState[row][column] = 1;
+      } else if (livingNeighbours == 2) {
+        if ((state[row][column] = 1)) {
+          newState[row][column] = 1;
+        } else {
+          newState[row][column] = 0;
+        }
+      } else {
+        newState[row][column] = 0;
+      }
+    }
+  }
+  currentState = newState;
+  return newState;
 }
 
 function draw(state) {
   let idCount = 0;
-  for (let row = 0; row < state.length; row++) {
-    for (column = 0; column < state.length; column++) {
+  for (let row = 1; row < state.length - 1; row++) {
+    for (column = 1; column < state.length - 1; column++) {
       // draw a live cell
-      if (state[row][column] == 0) {
+      if (state[row][column] == 1) {
         let newColor = randomColor();
-        let cell = document.getElementById(idCount); // ?
+        let cell = document.getElementById(idCount);
         cell.setAttribute(
           "style",
           `padding:0;
           background-color: #${newColor};
+          width:${2 * padding}px;
+          min-height: ${2 * padding}px;`
+        );
+      }
+      // draw a dead cell
+      if (state[row][column] == 0) {
+        let cell = document.getElementById(idCount);
+        cell.setAttribute(
+          "style",
+          `padding:0;
+          background-color: white;
           width:${2 * padding}px;
           min-height: ${2 * padding}px;`
         );
