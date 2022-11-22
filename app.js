@@ -15,7 +15,7 @@ initialState[4][4] = 1;
 initialState[4][5] = 1;
 initialState[4][6] = 1;
 
-let currentState = initialState; // mutating ?
+let currentState = initialState.map((row) => [...row]);
 
 let body = document.querySelector("body");
 body.addEventListener("load", buildStructure(initialState));
@@ -33,7 +33,10 @@ function buildStructure(state) {
       cell.setAttribute("id", idCount); // ?
       idCount++;
       padding = (GRIDWIDTH - 2 * size) / (2 * size); // border = 1px * 2
-      cell.setAttribute("style", `padding:${padding}px`);
+      cell.setAttribute(
+        "style",
+        `padding:${padding}px; background-color: white;`
+      );
       cell.innerText = " ";
       // redraw whole grid on mouse movement into new cell
       cell.addEventListener("mouseenter", () => {
@@ -60,7 +63,7 @@ function calcNewState(state, id) {
   // }
 
   // calculate new grid
-  let newState = state;
+  let newState = state.map((row) => [...row]);
   for (let row = 1; row < state.length - 1; row++) {
     for (column = 1; column < state.length - 1; column++) {
       // count living cells among 8 neighbours
@@ -88,7 +91,7 @@ function calcNewState(state, id) {
       }
     }
   }
-  currentState = newState;
+  currentState = newState.map((row) => [...row]);
   return newState;
 }
 
@@ -127,6 +130,7 @@ function draw(state) {
 // button to reset
 const resetBtn = document.getElementById("resetBtn");
 resetBtn.addEventListener("click", () => {
+  currentState = initialState.map((row) => [...row]);
   draw(initialState);
 });
 

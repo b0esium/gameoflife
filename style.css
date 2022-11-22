@@ -1,3 +1,7 @@
+body {
+    background-color: rgb(214, 214, 214);
+}
+
 .container {
     display: flex;
     justify-content: center;
@@ -6,6 +10,7 @@
 #grid {
     flex-direction: column;
     margin-top: 2%;
+    border: 2px solid rgb(70, 70, 70);
 }
 
 .row {
