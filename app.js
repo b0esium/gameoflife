@@ -1,4 +1,4 @@
-const SIZE = 16;
+const SIZE = 8;
 let grid = document.getElementById("grid");
 const GRIDWIDTH = 800;
 grid.setAttribute("width", `${GRIDWIDTH}px`);
@@ -11,10 +11,13 @@ for (let i = 0; i < SIZE + 2; i++) {
 }
 
 // fake seed
-initialState[4][4] = 1;
-initialState[4][5] = 1;
-initialState[4][6] = 1;
+initialState[1][1] = 1;
+initialState[1][3] = 1;
+initialState[1][4] = 1;
+initialState[2][1] = 1;
+initialState[2][4] = 1;
 
+// deep clone
 let currentState = initialState.map((row) => [...row]);
 
 let body = document.querySelector("body");
@@ -40,14 +43,14 @@ function buildStructure(state) {
       cell.innerText = " ";
       // redraw whole grid on mouse movement into new cell
       cell.addEventListener("mouseenter", () => {
-        draw(calcNewState(currentState, idCount));
+        draw(calcNewState(currentState));
       });
       newRow.append(cell);
     }
   }
 }
 
-function calcNewState(state, id) {
+function calcNewState(state) {
   // toggle current mouse pointer cell
   // let idCount = 0;
   // for (let row = 1; row < state.length - 1; row++) {
@@ -64,6 +67,8 @@ function calcNewState(state, id) {
 
   // calculate new grid
   let newState = state.map((row) => [...row]);
+  // debug
+  let idCount = 0;
   for (let row = 1; row < state.length - 1; row++) {
     for (column = 1; column < state.length - 1; column++) {
       // count living cells among 8 neighbours
@@ -81,7 +86,7 @@ function calcNewState(state, id) {
       if (livingNeighbours == 3) {
         newState[row][column] = 1;
       } else if (livingNeighbours == 2) {
-        if ((state[row][column] = 1)) {
+        if (state[row][column] == 1) {
           newState[row][column] = 1;
         } else {
           newState[row][column] = 0;
@@ -89,6 +94,10 @@ function calcNewState(state, id) {
       } else {
         newState[row][column] = 0;
       }
+      // debug
+      let cell = document.getElementById(idCount);
+      cell.innerText = livingNeighbours;
+      idCount++;
     }
   }
   currentState = newState.map((row) => [...row]);
@@ -127,7 +136,7 @@ function draw(state) {
   }
 }
 
-// button to reset
+// button to reset grid
 const resetBtn = document.getElementById("resetBtn");
 resetBtn.addEventListener("click", () => {
   currentState = initialState.map((row) => [...row]);
