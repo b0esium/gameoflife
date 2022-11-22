@@ -1,5 +1,5 @@
 // basic parameters
-const SIZE = 8;
+const SIZE = 16;
 const GRIDWIDTH = 800;
 
 let grid = document.getElementById("grid");
