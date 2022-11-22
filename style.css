@@ -9,7 +9,7 @@ body {
 
 #grid {
     flex-direction: column;
-    margin-top: 2%;
+    margin-top: 4%;
     border: 2px solid rgb(70, 70, 70);
 }
 
@@ -21,6 +21,6 @@ body {
     border: 1px solid #DDDDDD;
 }
 
-#changeSizeBtn {
+#resetBtn {
     margin-top: 2%;
 }

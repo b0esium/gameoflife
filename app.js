@@ -45,39 +45,47 @@ function buildStructure(state) {
       let cell = document.createElement("div");
       cell.setAttribute("class", "cell");
       cell.setAttribute("id", idCount);
-      idCount++;
       cell.setAttribute(
         "style",
         `padding:${padding}px; background-color: white;`
       );
       cell.innerText = " ";
       // redraw whole grid on mouse movement into new cell
-      cell.addEventListener("mouseenter", () => {
+      cell.addEventListener("click", (event) => {
+        toggleCell(event.target.id);
+        // draw next gen
         draw(calcNewState(currentState));
       });
       newRow.append(cell);
+      idCount++;
     }
   }
   draw(state);
 }
 
+// toggle cell the mouse pointer enters
+function toggleCell(id) {
+  let idCount = 0;
+  for (let row = 1; row <= SIZE; row++) {
+    for (column = 1; column <= SIZE; column++) {
+      if (idCount == id) {
+        if (currentState[row][column] == 0) {
+          currentState[row][column] = 1;
+          return;
+        } else {
+          currentState[row][column] = 0;
+          return;
+        }
+      } else {
+        idCount++;
+      }
+    }
+  }
+}
+
 // generate a new state based on the current one and Conway's rules
 function calcNewState(state) {
-  // toggle current mouse pointer cell
-  // let idCount = 0;
-  // for (let row = 1; row < state.length - 1; row++) {
-  //   for (column = 1; column < state.length - 1; column++) {
-  //     if (idCount == id) {
-  //       state[row][column] == 0
-  //         ? (state[row][column] = 1)
-  //         : (state[row][column] = 0);
-  //     } else {
-  //       idCount++;
-  //     }
-  //   }
-  // }
-
-  // calculate new grid
+  // create new temporary state
   let newState = state.map((row) => [...row]);
   for (let row = 1; row < state.length - 1; row++) {
     for (column = 1; column < state.length - 1; column++) {
@@ -106,7 +114,7 @@ function calcNewState(state) {
       }
     }
   }
-  // update state
+  // update working state with the temp
   currentState = newState.map((row) => [...row]);
   return newState;
 }
@@ -151,9 +159,9 @@ resetBtn.addEventListener("click", () => {
 });
 
 function randomColor() {
-  let r = randomInt(255);
-  let g = randomInt(255);
-  let b = randomInt(255);
+  let r = randomInt(96);
+  let g = randomInt(128);
+  let b = randomInt(128);
   // make a string of hex values
   return [r, g, b].map((value) => value.toString(16).padStart(2, 0)).join("");
 }
