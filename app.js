@@ -1,41 +1,51 @@
+// basic parameters
 const SIZE = 8;
-let grid = document.getElementById("grid");
 const GRIDWIDTH = 800;
+
+let grid = document.getElementById("grid");
 grid.setAttribute("width", `${GRIDWIDTH}px`);
-let padding = 0;
+let padding = (GRIDWIDTH - 2 * SIZE) / (2 * SIZE); // border = 1px * 2
 
-// virtual grid with 1 row or column of padding around each side
-let initialState = new Array(SIZE + 2).fill(0);
-for (let i = 0; i < SIZE + 2; i++) {
-  initialState[i] = new Array(SIZE + 2).fill(0);
-}
-
-// fake seed
-initialState[1][1] = 1;
-initialState[1][3] = 1;
-initialState[1][4] = 1;
-initialState[2][1] = 1;
-initialState[2][4] = 1;
-
-// deep clone
-let currentState = initialState.map((row) => [...row]);
+let currentState = new Array();
 
 let body = document.querySelector("body");
-body.addEventListener("load", buildStructure(initialState));
+body.addEventListener("load", buildStructure(initializeState()));
 
+// create a new state with a random number of live cells
+function initializeState() {
+  // virtual grid with 1 row or column of dead cells around each side
+  let initialState = new Array(SIZE + 2).fill(0);
+  for (let i = 0; i < SIZE + 2; i++) {
+    initialState[i] = new Array(SIZE + 2).fill(0);
+  }
+
+  // create random seed
+  const liveCells = SIZE * randomInt(2) + 8;
+  for (let i = 0; i <= liveCells; i++) {
+    // inside real grid
+    let row = randomInt(SIZE - 2) + 1;
+    let column = randomInt(SIZE - 2) + 1;
+    initialState[row][column] = 1;
+  }
+
+  // deep clone initial state array into working array
+  currentState = initialState.map((row) => [...row]);
+
+  return initialState;
+}
+
+// build DOM
 function buildStructure(state) {
-  let size = state.length;
   let idCount = 0;
-  for (let row = 1; row < size - 1; row++) {
+  for (let row = 1; row <= SIZE; row++) {
     let newRow = document.createElement("div");
     newRow.setAttribute("class", "row");
     grid.append(newRow);
-    for (let column = 1; column < size - 1; column++) {
+    for (let column = 1; column <= SIZE; column++) {
       let cell = document.createElement("div");
       cell.setAttribute("class", "cell");
-      cell.setAttribute("id", idCount); // ?
+      cell.setAttribute("id", idCount);
       idCount++;
-      padding = (GRIDWIDTH - 2 * size) / (2 * size); // border = 1px * 2
       cell.setAttribute(
         "style",
         `padding:${padding}px; background-color: white;`
@@ -48,8 +58,10 @@ function buildStructure(state) {
       newRow.append(cell);
     }
   }
+  draw(state);
 }
 
+// generate a new state based on the current one and Conway's rules
 function calcNewState(state) {
   // toggle current mouse pointer cell
   // let idCount = 0;
@@ -67,8 +79,6 @@ function calcNewState(state) {
 
   // calculate new grid
   let newState = state.map((row) => [...row]);
-  // debug
-  let idCount = 0;
   for (let row = 1; row < state.length - 1; row++) {
     for (column = 1; column < state.length - 1; column++) {
       // count living cells among 8 neighbours
@@ -94,16 +104,14 @@ function calcNewState(state) {
       } else {
         newState[row][column] = 0;
       }
-      // debug
-      let cell = document.getElementById(idCount);
-      cell.innerText = livingNeighbours;
-      idCount++;
     }
   }
+  // update state
   currentState = newState.map((row) => [...row]);
   return newState;
 }
 
+// update cell colours according to liveness
 function draw(state) {
   let idCount = 0;
   for (let row = 1; row < state.length - 1; row++) {
@@ -139,8 +147,7 @@ function draw(state) {
 // button to reset grid
 const resetBtn = document.getElementById("resetBtn");
 resetBtn.addEventListener("click", () => {
-  currentState = initialState.map((row) => [...row]);
-  draw(initialState);
+  draw(initializeState());
 });
 
 function randomColor() {
