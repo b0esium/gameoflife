@@ -44,6 +44,14 @@ function buildStructure(state) {
       cell.setAttribute("id", idCount);
       cell.setAttribute("style", `background-color: white;`);
       cell.innerText = " ";
+      // hightlight current cell
+      cell.addEventListener("mouseenter", () => {
+        cell.setAttribute("class", "cell col-1 hover");
+      });
+      // un-hightlight current cell
+      cell.addEventListener("mouseleave", () => {
+        cell.setAttribute("class", "cell col-1");
+      });
       // redraw whole grid on mouse movement into new cell
       cell.addEventListener("click", (event) => {
         toggleCell(event.target.id);
@@ -147,9 +155,9 @@ resetBtn.addEventListener("click", () => {
 });
 
 function randomColor() {
-  let r = randomInt(96);
-  let g = randomInt(128);
-  let b = randomInt(128);
+  let r = 32;
+  let g = 128;
+  let b = randomInt(128) + 127;
   // make a string of hex values
   return [r, g, b].map((value) => value.toString(16).padStart(2, 0)).join("");
 }

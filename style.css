@@ -2,8 +2,12 @@ body {
     background-color: aliceblue;
 }
 
+.container {
+    max-width: 800px;
+}
+
 #grid {
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .cell {
@@ -11,9 +15,13 @@ body {
     border-radius: 5px;
 }
 
+.hover {
+    border-color: rgb(170, 224, 255);
+}
+
 #resetBtn {
-    margin-top: 2%;
+    margin-top: 5%;
     background-color: rgb(170, 224, 255);
     color: rgb(99, 99, 99);
-    border-color: rgb(255, 141, 141);
+    border-color: #ebebeb;
 }
