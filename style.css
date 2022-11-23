@@ -1,26 +1,19 @@
 body {
-    background-color: rgb(214, 214, 214);
-}
-
-.container {
-    display: flex;
-    justify-content: center;
+    background-color: aliceblue;
 }
 
 #grid {
-    flex-direction: column;
-    margin-top: 4%;
-    border: 2px solid rgb(70, 70, 70);
-}
-
-.row {
-    display: flex;
+    margin-top: 10%;
 }
 
 .cell {
-    border: 1px solid #DDDDDD;
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
 }
 
 #resetBtn {
     margin-top: 2%;
+    background-color: rgb(170, 224, 255);
+    color: rgb(99, 99, 99);
+    border-color: rgb(255, 141, 141);
 }

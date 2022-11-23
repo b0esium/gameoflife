@@ -1,10 +1,7 @@
 // basic parameters
-const SIZE = 16;
-const GRIDWIDTH = 800;
+const SIZE = 12;
 
 let grid = document.getElementById("grid");
-grid.setAttribute("width", `${GRIDWIDTH}px`);
-let padding = (GRIDWIDTH - 2 * SIZE) / (2 * SIZE); // border = 1px * 2
 
 let currentState = new Array();
 
@@ -43,12 +40,9 @@ function buildStructure(state) {
     grid.append(newRow);
     for (let column = 1; column <= SIZE; column++) {
       let cell = document.createElement("div");
-      cell.setAttribute("class", "cell");
+      cell.setAttribute("class", "cell col-1");
       cell.setAttribute("id", idCount);
-      cell.setAttribute(
-        "style",
-        `padding:${padding}px; background-color: white;`
-      );
+      cell.setAttribute("style", `background-color: white;`);
       cell.innerText = " ";
       // redraw whole grid on mouse movement into new cell
       cell.addEventListener("click", (event) => {
@@ -130,10 +124,7 @@ function draw(state) {
         let cell = document.getElementById(idCount);
         cell.setAttribute(
           "style",
-          `padding:0;
-          background-color: #${newColor};
-          width:${2 * padding}px;
-          min-height: ${2 * padding}px;`
+          `background-color: #${newColor}; aspect-ratio: 1/ 1;`
         );
       }
       // draw a dead cell
@@ -141,10 +132,7 @@ function draw(state) {
         let cell = document.getElementById(idCount);
         cell.setAttribute(
           "style",
-          `padding:0;
-          background-color: white;
-          width:${2 * padding}px;
-          min-height: ${2 * padding}px;`
+          `background-color: white; aspect-ratio: 1/ 1;`
         );
       }
       idCount++;
